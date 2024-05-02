@@ -47,6 +47,7 @@ export type PropsStack = PropsTab & {
     SenhaRedefinida: undefined;
     Foto: undefined;
     ChecklistUsuario: undefined;
+    Home: undefined
 
 };
 
