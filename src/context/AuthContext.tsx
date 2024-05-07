@@ -9,6 +9,8 @@ interface AuthProp {
   onLogin?: (email: string, password: string) => Promise<any>
   onLogout?: () => Promise<any>
   onGetUserAll?: () => Promise<any>
+  onGetEpiSolicitacoes?: () => Promise<any>
+  onGetEquipamentoSolicitacoes?: () => Promise<any>
 }
 
 const TOKEN_KEY = 'my-jwt'
