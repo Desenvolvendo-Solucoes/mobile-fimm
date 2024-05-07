@@ -3,15 +3,21 @@ import { Text, View,TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { PropsStack } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useAuth } from "../../context/AuthContext";
 
 //COMPONENTS
 import EpiCard from "../../components/EpiCard"
 
 const Epi: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
+  const { onGetUserAll } = useAuth()
 
   const solicitarEpi = () => {
-    navigation.navigate('SolicitarEpi');
+    onGetUserAll().then((result) => {
+      console.log(result)
+    })
+    
+    //navigation.navigate('SolicitarEpi');
   };
 
   return (
