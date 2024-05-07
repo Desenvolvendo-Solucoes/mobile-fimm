@@ -17,7 +17,7 @@ const Credencial: React.FC = () => {
   return (
 
     <View className="flex flex-1 justify-start p-6" >
-      <View className="mt-10">
+      <View className=" w-10 h-10 mt-10">
       <BtnVoltar page={'Login'}/>
       </View>
       <View className="items-start">
