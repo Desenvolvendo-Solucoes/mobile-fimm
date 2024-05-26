@@ -11,6 +11,8 @@ interface AuthProp {
   onGetUserAll?: () => Promise<any>
   onGetEpiSolicitacoes?: () => Promise<any>
   onGetEquipamentoSolicitacoes?: () => Promise<any>
+  onGetUserHolerites?: () => Promise<string[]>
+
 }
 
 const TOKEN_KEY = 'my-jwt'
@@ -52,25 +54,28 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
   const login = async (email: string, senha: string) => {
-    try {
-      const result = await axios.post(`${API_URL}/auth/login`, null, { params: { email, senha } })
+//    try {
+//      const result = await axios.post(`${API_URL}/auth/login`, null, { params: { email, senha } })
 
-      setAuthState({
-        token: result.data.access_token,
-        authenticated: true
-      })
+  //    setAuthState({
+ //       token: result.data.access_token,
+ //       authenticated: true
+//      })
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access_token}`
+  //    axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access_token}`
 
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data.access_token)
+    //  await SecureStore.setItemAsync(TOKEN_KEY, result.data.access_token)
 
-      return result
+    //  return result
 
-    } catch (e) {
-      console.log(e);
+   // } catch (e) {
+   //   console.log(e);
 
-      return { error: true, msg: (e as any).response.data.msg }
-    }
+    //  return { error: true, msg: (e as any).response.data.msg }
+   // }
+   setAuthState({
+    token: '',
+    authenticated: true})
   }
   const logout = async () => {
     // Deleta o token do storage
@@ -363,6 +368,23 @@ export const AuthProvider = ({ children }: any) => {
 
     
   }
+  const getUserHolerites = async () : Promise<string[]> => {
+
+    return new Promise(async(resolve, reject) => {
+
+      try {
+        const result = await axios.get(`${API_URL}/holerites/getUserHolerites`)
+  
+        resolve(result.data)
+  
+      } catch (e) {
+  
+        reject({ error: true, msg: (e as any).response.data.msg })
+      }
+
+    })
+
+  }
 
 
   const value = {
@@ -384,6 +406,7 @@ export const AuthProvider = ({ children }: any) => {
     onUpdateEquipamentoStatus: updateEquipamentoStatus,
     onGetEquipamentoSolicitacoes: getEquipamentoSolicitacoes,
     onGetEquipamentoCadastrados: getEquipamentoCadastrados,
+    onGetUserHolerites: getUserHolerites,
 
     authState: authState,
   }

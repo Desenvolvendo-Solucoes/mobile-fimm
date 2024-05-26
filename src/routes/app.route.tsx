@@ -111,7 +111,7 @@ const AppRoutes: React.FC = () => {
         )
       }}
     >
-      <AppTabs.Screen
+    {/* <AppTabs.Screen
         name="EPI"
         component={Epi}
         options={{
@@ -132,7 +132,7 @@ const AppRoutes: React.FC = () => {
             }
           }
         }}
-      />
+      /> */}
       <AppTabs.Screen
         name="Holerite"
         component={Holerites}
@@ -156,7 +156,7 @@ const AppRoutes: React.FC = () => {
           }
         }}
       />
-      <AppTabs.Screen
+      {/* <AppTabs.Screen
         name="Equipamento"
         component={Equipamento}
         options={{
@@ -201,7 +201,7 @@ const AppRoutes: React.FC = () => {
             }
           }
         }}
-      />
+      /> */}
     </AppTabs.Navigator>
   )
 }
