@@ -24,18 +24,6 @@ export const useAuth = () => {
   return useContext(AuthContext)
 }
 
-const arrayBufferToBase64 = (buffer) => {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  console.log('Bytes:', bytes);
-
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return base64.encode(binary);
-};
-
 export const AuthProvider = ({ children }: any) => {
   const [authState, setAuthState] = useState<{
     token: string | null,
@@ -48,7 +36,6 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const loadToken = async () => {
       const token = await SecureStore.getItemAsync(TOKEN_KEY)
-      console.log(token);
 
       if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -265,17 +252,15 @@ export const AuthProvider = ({ children }: any) => {
   const getHoleriteFile = async (mes: string, ano: string): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('chamou');
+        const result = await axios.get(`${API_URL}/holerite/file`, {
+          params: { mes: mes, ano: ano }
+        })
 
-        const result = await axios.get(`${API_URL}/holerite/file?mes=${mes}&ano=${ano}`)
+        resolve(result.data);
 
-        const imageStr = arrayBufferToBase64(result.data);
-
-        resolve(`data:image/jpeg;base64,${imageStr}`)
       } catch (e) {
 
-
-        reject({ error: true, msg: (e as any).response.data.msg })
+        reject({ error: (e as any).response.data.error, code: (e as any).response.data.code })
       }
 
     })

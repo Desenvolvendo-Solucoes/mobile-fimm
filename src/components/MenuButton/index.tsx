@@ -15,33 +15,51 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
   const fullDate = new Date();
   fullDate.setMonth(fullDate.getMonth() - subtrai);
 
-  const { onGetUserHolerites, onGetHoleriteFile, authState } = useAuth();
+  const { onGetHoleriteFile } = useAuth();
 
   useEffect(() => {
+    console.log("active: ", active);
 
+    if (subtrai === 0) {
+
+      selecionaMes()
+    }
   }, []);
 
 
+
   const selecionaMes = () => {
+    // Verifica se fullDate está inicializado
+    if (!fullDate) {
+      console.error("fullDate não está inicializado.");
+      return;
+    }
+
+    // Define o filtro baseado no mês atual
     setFilter(meses[fullDate.getMonth()]);
-    let mes = (fullDate.getMonth() + 1).toString();
-    let ano = fullDate.getFullYear().toString();
 
-    onGetHoleriteFile(mes, ano).then((file) => {
-      console.log(file);
+    // Obtém o mês e o ano atuais como strings
+    let mes: string = (fullDate.getMonth() + 1).toString();
+    let ano: string = fullDate.getFullYear().toString();
 
-      setImageUrl(file)
-    }).catch((err) => {
-      console.error(err);
-    })
-  }
+    // Recupera o arquivo e define a URL da imagem
+    onGetHoleriteFile(mes, ano)
+      .then((file: string) => {
+
+        setImageUrl(file);
+      })
+      .catch((err) => {
+        console.error("Falha ao recuperar o arquivo:", err);
+      });
+  };
+
 
 
   return (
 
     <View>
       <TouchableOpacity
-        className={`${active === true ? "bg-secondary" : ""}p-3 rounded-md justify-center items-center`}
+        className={`${filter === meses[fullDate.getMonth()] ? "bg-secondary" : ""} p-3 rounded-md justify-center items-center`}
         onPress={() => {
           selecionaMes()
         }}

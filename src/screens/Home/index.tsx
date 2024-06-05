@@ -6,6 +6,8 @@ import {
   Image,
   Alert,
   Modal,
+  Dimensions,
+  StatusBar,
 } from "react-native";
 import MenuButton from "../../components/MenuButton";
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -13,8 +15,8 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import LottieView from "lottie-react-native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { mesesString } from "../../context/config";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 
 
@@ -28,11 +30,17 @@ const Holerites: React.FC = () => {
   const fullDate = new Date();
   const [filter, setFilter] = useState(meses[fullDate.getMonth()]);
 
+  const screenHeight = Dimensions.get("screen").height;
+  const windowHeight = Dimensions.get("window").height;
+  const headerHeight = useHeaderHeight();
+  const navbarHeight =
+    screenHeight - windowHeight + StatusBar.currentHeight + headerHeight + 48;
+
   useEffect(() => {
     checkPermissions();
     // Verifica se a URL está vazia e atualiza o estado 'naoGerado' em conformidade
     if (url === "") {
-      setNaoGerado(true);
+      setNaoGerado(false);
     } else {
       setNaoGerado(false);
     }
@@ -139,12 +147,14 @@ const Holerites: React.FC = () => {
         <View style={{ flex: 1 }}>
           <TouchableOpacity onPress={() => setImageOpen(true)}>
             {url ? (
-              <Image
-                style={{
-                  flex: 1,
-                  resizeMode: "contain",
-                }}
-                source={{ uri: url }}
+              <Image style={{
+                height:
+                  Dimensions.get("window").height - navbarHeight,
+                resizeMode: "contain",
+                width: Dimensions.get("window").width,
+              }}
+
+                source={{ uri: 'https://storage.googleapis.com/totalaccess-42a70.appspot.com/holerite/6-2024/000058.jpg?GoogleAccessId=firebase-adminsdk-tw588%40totalaccess-42a70.iam.gserviceaccount.com&Expires=1717702753&Signature=VoJVoiNU5JmS4fgh36BPp%2BwjHpDqz6UcUUB1P%2BPg6ENX91bMVaxyMP6vJelLHOpd%2B8yjYslMSdz1Xr0AJbmncfJZ5FKMeQydwsRg%2FHwuFgwWz9yFObZDISuPZ%2BLabqiQ1EgMFGe0vOkReL%2FhfeXhOuFs2XG%2Bw5eNgKx2Rnuytvd4lLdMd5w3ubQnSi2T8WtRe3jO8BegzaI50f0SODqZ7UOZ7z3%2BIJgIGiTBktDLKju9%2BxLb%2BaoMGpnGmu1hxX9ifGjAMzZ2huKOGKx9c%2BnR0mcVORrljZONmwpuh0pIeIGN%2BHYTnEEqONnLGsQxterPGG0luHIsLx7RhS0ro4NGaw%3D%3D' }}
               />
             ) : (
               <View className=" w-full h-5/6 items-center justify-center">
