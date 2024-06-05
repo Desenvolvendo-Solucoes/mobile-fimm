@@ -3,12 +3,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
-  StatusBar,
   Image,
   Alert,
   Modal,
-  Button
 } from "react-native";
 import MenuButton from "../../components/MenuButton";
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -16,13 +13,20 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import LottieView from "lottie-react-native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { mesesString } from "../../context/config";
+
+
 
 const Holerites: React.FC = () => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState();
   const [naoGerado, setNaoGerado] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [imageOpen, setImageOpen] = useState(false);
+  const meses = mesesString()
+  const fullDate = new Date();
+  const [filter, setFilter] = useState(meses[fullDate.getMonth()]);
 
   useEffect(() => {
     checkPermissions();
@@ -36,19 +40,19 @@ const Holerites: React.FC = () => {
 
   const renderDownloadIcon = () => {
     if (downloadStatus) {
-        return (
-            <LottieView
-                source={require("../../../assets/load.json")}
-                autoPlay={true}
-            />
-        );
+      return (
+        <LottieView
+          source={require("../../../assets/load.json")}
+          autoPlay={true}
+        />
+      );
     } else {
-        return(
-          <View className="flex flex-row items-center justify-center">
-            <SimpleLineIcons name="cloud-download" size={25} color="#fff" />
-            <Text className="text-white font-bold ml-2">Baixar Holerite</Text>
-          </View>
-        );
+      return (
+        <View className="flex flex-row items-center justify-center">
+          <SimpleLineIcons name="cloud-download" size={25} color="#fff" />
+          <Text className="text-white font-bold ml-2">Baixar Holerite</Text>
+        </View>
+      );
     }
   };
 
@@ -94,7 +98,35 @@ const Holerites: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <MenuButton setUrl={setUrl} />
+      <View className=" flex flex-row justify-around items-center w-11/12 h-12 mt-6 ">
+        <MenuButton
+          subtrai={2}
+          active={false}
+          filter={filter}
+          setFilter={setFilter}
+          meses={meses}
+          setNaoGerado={setNaoGerado}
+          setImageUrl={setUrl}
+        />
+        <MenuButton
+          subtrai={1}
+          active={false}
+          filter={filter}
+          setFilter={setFilter}
+          meses={meses}
+          setNaoGerado={setNaoGerado}
+          setImageUrl={setUrl}
+        />
+        <MenuButton
+          subtrai={0}
+          active={true}
+          filter={filter}
+          setFilter={setFilter}
+          meses={meses}
+          setNaoGerado={setNaoGerado}
+          setImageUrl={setUrl}
+        />
+      </View>
       {naoGerado ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           <Text>Não há holerites no momento!</Text>
@@ -118,7 +150,7 @@ const Holerites: React.FC = () => {
               <View className=" w-full h-5/6 items-center justify-center">
                 <Text className="">Não há holerites no momento!</Text>
                 <Image
-                  style={{ top:20 }}
+                  style={{ top: 20 }}
                   source={require("../../../assets/naoGerado.png")}
                 />
               </View>
@@ -134,18 +166,18 @@ const Holerites: React.FC = () => {
           <View className="w-full h-12  items-center  bg-white">
             <TouchableOpacity
               className="bg-primary h-10 w-10/12 rounded-md flex p-2"
-              onPress={handleDownload} 
+              onPress={handleDownload}
             >
               {renderDownloadIcon()}
             </TouchableOpacity>
           </View>
-        </View>
+        </View >
       )}
 
       <Modal visible={imageOpen} transparent={true}>
         <ImageViewer imageUrls={[{ url: url }]} />
       </Modal>
-    </View>
+    </View >
   );
 };
 
