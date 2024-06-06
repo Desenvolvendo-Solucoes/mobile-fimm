@@ -18,7 +18,6 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
   const { onGetHoleriteFile } = useAuth();
 
   useEffect(() => {
-    console.log("active: ", active);
 
     if (subtrai === 0) {
 

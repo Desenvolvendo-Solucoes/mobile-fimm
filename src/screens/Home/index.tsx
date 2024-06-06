@@ -21,7 +21,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 
 
 const Holerites: React.FC = () => {
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState('');
   const [naoGerado, setNaoGerado] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
@@ -38,9 +38,11 @@ const Holerites: React.FC = () => {
 
   useEffect(() => {
     checkPermissions();
+    console.log(url.length);
+
     // Verifica se a URL está vazia e atualiza o estado 'naoGerado' em conformidade
-    if (url === "") {
-      setNaoGerado(false);
+    if (url.length === 0) {
+      setNaoGerado(true);
     } else {
       setNaoGerado(false);
     }
@@ -104,6 +106,21 @@ const Holerites: React.FC = () => {
     }
   };
 
+  const renderDownloadButton = () => {
+    if (!naoGerado) {
+      return (
+        <View className="w-full h-12  items-center  bg-white">
+          <TouchableOpacity
+            className="bg-primary h-10 w-10/12 rounded-md flex p-2"
+            onPress={handleDownload}
+          >
+            {renderDownloadIcon()}
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <View className=" flex flex-row justify-around items-center w-11/12 h-12 mt-6 ">
@@ -154,8 +171,13 @@ const Holerites: React.FC = () => {
                 width: Dimensions.get("window").width,
               }}
 
-                source={{ uri: 'https://storage.googleapis.com/totalaccess-42a70.appspot.com/holerite/6-2024/000058.jpg?GoogleAccessId=firebase-adminsdk-tw588%40totalaccess-42a70.iam.gserviceaccount.com&Expires=1717702753&Signature=VoJVoiNU5JmS4fgh36BPp%2BwjHpDqz6UcUUB1P%2BPg6ENX91bMVaxyMP6vJelLHOpd%2B8yjYslMSdz1Xr0AJbmncfJZ5FKMeQydwsRg%2FHwuFgwWz9yFObZDISuPZ%2BLabqiQ1EgMFGe0vOkReL%2FhfeXhOuFs2XG%2Bw5eNgKx2Rnuytvd4lLdMd5w3ubQnSi2T8WtRe3jO8BegzaI50f0SODqZ7UOZ7z3%2BIJgIGiTBktDLKju9%2BxLb%2BaoMGpnGmu1hxX9ifGjAMzZ2huKOGKx9c%2BnR0mcVORrljZONmwpuh0pIeIGN%2BHYTnEEqONnLGsQxterPGG0luHIsLx7RhS0ro4NGaw%3D%3D' }}
+                source={{ uri: url }}
               />
+
+              // <Image className={`h-[calc(${Dimensions.get("window").height - navbarHeight})] w-[calc(${Dimensions.get("window").width})] `}
+
+              //   source={{ uri: url }}
+              // />
             ) : (
               <View className=" w-full h-5/6 items-center justify-center">
                 <Text className="">Não há holerites no momento!</Text>
@@ -172,20 +194,13 @@ const Holerites: React.FC = () => {
             }}
             source={{ uri: url }}
           />
+          {renderDownloadButton()}
 
-          <View className="w-full h-12  items-center  bg-white">
-            <TouchableOpacity
-              className="bg-primary h-10 w-10/12 rounded-md flex p-2"
-              onPress={handleDownload}
-            >
-              {renderDownloadIcon()}
-            </TouchableOpacity>
-          </View>
         </View >
       )}
 
       <Modal visible={imageOpen} transparent={true}>
-        <ImageViewer imageUrls={[{ url: url }]} />
+        <ImageViewer imageUrls={[{ url: url }]} onSwipeDown={() => setImageOpen(false)} enableSwipeDown />
       </Modal>
     </View >
   );
