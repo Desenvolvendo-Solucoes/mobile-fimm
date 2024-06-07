@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 //COMPONENTS
 import Input from "../../components/Input";
-import { useAuth } from "src/context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 
 
