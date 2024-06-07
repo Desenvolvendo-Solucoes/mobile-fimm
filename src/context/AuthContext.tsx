@@ -13,6 +13,8 @@ interface AuthProp {
   onGetEquipamentoSolicitacoes?: () => Promise<any>
   onGetUserHolerites?: () => Promise<string[]>
   onGetHoleriteFile?: (mes: string, ano: string) => Promise<any>
+  onPrimeiroAcesso?: (cpf: string, matricula: string, email: string, senha: string) => Promise<any>
+  onGetUsersCadastrado?:  (cpf: string, matricula: string) => Promise<any>
 
 }
 
@@ -266,6 +268,42 @@ export const AuthProvider = ({ children }: any) => {
     })
   }
 
+  const primeiroAcesso = async (cpf: string, matricula: string, email: string, senha: string) => {
+
+    return new Promise(async (resolve, reject) => {
+
+      try {
+        const result = await axios.post(`${API_URL}/equip/solicita`, null, { params: { cpf, matricula, email, senha } })
+
+        resolve(result.data)
+
+      } catch (e) {
+
+        reject({ error: true, msg: (e as any).response.data.msg })
+      }
+
+    })
+
+
+  }
+
+  const getUsersCadastrado = async (cpf: string, matricula: string): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = await axios.get(`${API_URL}/holerite/file`, {
+          params: { cpf: cpf, matricula: matricula }
+        })
+
+        resolve(result.data);
+
+      } catch (e) {
+
+        reject({ error: (e as any).response.data.error, code: (e as any).response.data.code })
+      }
+
+    })
+  }
+
   const value = {
     onRegister: register,
     onLogin: login,
@@ -279,6 +317,8 @@ export const AuthProvider = ({ children }: any) => {
     onGetEquipamentoSolicitacoes: getEquipamentoSolicitacoes,
     onGetUserHolerites: getUserHolerites,
     onGetHoleriteFile: getHoleriteFile,
+    onPrimeiroAcesso: primeiroAcesso,
+    onGetUsersCadastrado: getUsersCadastrado,
     authState: authState,
   }
 

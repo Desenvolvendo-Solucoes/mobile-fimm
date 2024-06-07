@@ -7,15 +7,23 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 //COMPONENTS
 import Input from "../../components/Input";
+import { useAuth } from "src/context/AuthContext";
 
 
 
 const PrimeiroAcesso: React.FC = () => {
+  const { onPrimeiroAcesso,onGetUsersCadastrado } = useAuth()
   const [cpf, setCpf] = useState<string>()
   const [matricula, setMatricula] = useState<string>()
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
 
+  const verificaUsuario = async () => {
 
+    const result = await onGetUsersCadastrado!(cpf, matricula)
+    if (result && result.error) {
+      alert(result.msg)
+    }
+  }
 
   const voltar = () => {
     navigation.navigate('Login');
@@ -32,7 +40,7 @@ const PrimeiroAcesso: React.FC = () => {
       <Input value={cpf} setValue={setCpf} placeholder="CPF" />
       <TouchableOpacity 
       className="justify-center w-80 h-14 bg-primary rounded-full mt-10"
-      onPress={credencial}
+      onPress={verificaUsuario}
       >
         <Text className="text-center text-white font-bold">Continuar</Text>
       </TouchableOpacity>
