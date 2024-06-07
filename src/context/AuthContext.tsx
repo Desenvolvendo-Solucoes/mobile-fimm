@@ -19,7 +19,7 @@ interface AuthProp {
 }
 
 const TOKEN_KEY = 'my-jwt'
-export const API_URL = 'http://192.168.1.105:3000'
+export const API_URL = 'https://fimm-api.8corp.com.br'
 const AuthContext = createContext<AuthProp>({})
 
 export const useAuth = () => {
@@ -272,14 +272,12 @@ export const AuthProvider = ({ children }: any) => {
 
     return new Promise(async (resolve, reject) => {
 
-      try {
-        const result = await axios.post(`${API_URL}/equip/solicita`, null, { params: { cpf, matricula, email, senha } })
-
+      try {        
+        const result = await axios.post(`${API_URL}/user/primeiroAcesso`, null,{ params: { cpf, matricula, email, senha } })
         resolve(result.data)
-
+        
       } catch (e) {
-
-        reject({ error: true, msg: (e as any).response.data.msg })
+        reject({ error: true, msg: (e as any).response })
       }
 
     })
@@ -290,10 +288,9 @@ export const AuthProvider = ({ children }: any) => {
   const getUsersCadastrado = async (cpf: string, matricula: string): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const result = await axios.get(`${API_URL}/holerite/file`, {
+        const result = await axios.get(`${API_URL}/user/cadastrado`, {
           params: { cpf: cpf, matricula: matricula }
-        })
-
+        })        
         resolve(result.data);
 
       } catch (e) {

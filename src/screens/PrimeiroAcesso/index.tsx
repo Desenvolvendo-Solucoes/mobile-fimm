@@ -12,7 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 
 
 const PrimeiroAcesso: React.FC = () => {
-  const { onPrimeiroAcesso,onGetUsersCadastrado } = useAuth()
+  const {onGetUsersCadastrado } = useAuth()
   const [cpf, setCpf] = useState<string>()
   const [matricula, setMatricula] = useState<string>()
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
@@ -20,8 +20,15 @@ const PrimeiroAcesso: React.FC = () => {
   const verificaUsuario = async () => {
 
     const result = await onGetUsersCadastrado!(cpf, matricula)
-    if (result && result.error) {
-      alert(result.msg)
+    if(result.cadastrado === false) {
+
+      navigation.navigate('Credencial',{cpf: cpf, matricula: matricula});
+
+    }else{  
+
+    alert('Usuário já cadastrado')
+    navigation.navigate('Login');
+
     }
   }
 
@@ -29,15 +36,12 @@ const PrimeiroAcesso: React.FC = () => {
     navigation.navigate('Login');
   };
 
-  const credencial = () => {
-    navigation.navigate('Credencial');
-  };
 
   return (
     <View className="flex flex-1 justify-center items-center p-6" >
       <Image className="w-48 h-16 mb-8" source={require('../../../assets/loginImage.png')} resizeMode="stretch" />
       <Input value={matricula} setValue={setMatricula} placeholder="Matricula" />
-      <Input value={cpf} setValue={setCpf} placeholder="CPF" />
+      <Input value={cpf}  setValue={setCpf} placeholder="CPF" />
       <TouchableOpacity 
       className="justify-center w-80 h-14 bg-primary rounded-full mt-10"
       onPress={verificaUsuario}
