@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Button, Image, Pressable, Text, View, TouchableOpacity } from "react-native";
+import { Image, Text, View, TouchableOpacity } from "react-native";
 import Input from "../../components/Input";
 import { CheckBox } from 'react-native-elements'
 import Loading from "../../components/Loading";
+import Toast from 'react-native-toast-message';
 
 import { useNavigation } from '@react-navigation/native';
 import { PropsStack } from "../../types";
@@ -84,6 +85,7 @@ const Login: React.FC = () => {
           }}
         />
       </View>
+      <Toast />
 
 
     </View>

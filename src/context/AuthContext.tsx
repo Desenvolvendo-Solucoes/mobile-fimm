@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store'
-import base64 from 'base-64';
-import { Buffer } from 'buffer';
+
 
 interface AuthProp {
   authState?: { token: string | null; authenticated: boolean | null }
@@ -14,12 +13,12 @@ interface AuthProp {
   onGetUserHolerites?: () => Promise<string[]>
   onGetHoleriteFile?: (mes: string, ano: string) => Promise<any>
   onPrimeiroAcesso?: (cpf: string, matricula: string, email: string, senha: string) => Promise<any>
-  onGetUsersCadastrado?:  (cpf: string, matricula: string) => Promise<any>
+  onGetUsersCadastrado?: (cpf: string, matricula: string) => Promise<any>
 
 }
 
 const TOKEN_KEY = 'my-jwt'
-export const API_URL = 'https://fimm-api.8corp.com.br'
+export const API_URL = process.env.EXPO_PUBLIC_API_URL
 const AuthContext = createContext<AuthProp>({})
 
 export const useAuth = () => {
@@ -272,10 +271,10 @@ export const AuthProvider = ({ children }: any) => {
 
     return new Promise(async (resolve, reject) => {
 
-      try {        
-        const result = await axios.post(`${API_URL}/user/primeiroAcesso`, null,{ params: { cpf, matricula, email, senha } })
+      try {
+        const result = await axios.post(`${API_URL}/user/primeiroAcesso`, null, { params: { cpf, matricula, email, senha } })
         resolve(result.data)
-        
+
       } catch (e) {
         reject({ error: true, msg: (e as any).response })
       }
@@ -290,7 +289,7 @@ export const AuthProvider = ({ children }: any) => {
       try {
         const result = await axios.get(`${API_URL}/user/cadastrado`, {
           params: { cpf: cpf, matricula: matricula }
-        })        
+        })
         resolve(result.data);
 
       } catch (e) {
