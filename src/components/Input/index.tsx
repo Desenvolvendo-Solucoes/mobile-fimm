@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, View,ScrollView,StyleSheet  } from 'react-native'
+import { TextInput, View, ScrollView, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 
 type Props = {
@@ -30,7 +30,7 @@ const Input: React.FC<Props> = ({ value, setValue, placeholder, password }: Prop
         placeholder={placeholder}
         placeholderTextColor={'#8391A1'}
         secureTextEntry={password ? editing ? false : true : false}
-        
+        autoCapitalize={password ? 'none' : 'words'}
       />
       {EyeRender()}
     </View>

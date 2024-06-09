@@ -40,13 +40,16 @@ export type PropsStack = PropsTab & {
     Login: undefined;
     EsqueceuSenha: undefined;
     PrimeiroAcesso: undefined;
-    Credencial: undefined;
+    Credencial: {    
+        cpf: string;
+        matricula: string;}
     Verificacao: undefined;
     EnviarCod: undefined;
     AlterarSenha: undefined;
     SenhaRedefinida: undefined;
     Foto: undefined;
     ChecklistUsuario: undefined;
+    Home: undefined
 
 };
 

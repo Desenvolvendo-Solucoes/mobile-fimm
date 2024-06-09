@@ -1,10 +1,11 @@
+/// <reference types="nativewind/types" />
 import React from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import { PropsStack, PropsTab } from "../types";
 
 
@@ -28,81 +29,76 @@ import ChecklistUsuario from "../screens/ChecklistUsuario";
 
 // COMPONETS
 import Foto from "../components/Foto";
+import { useAuth } from "../context/AuthContext";
 
 
 const AppTabs = createBottomTabNavigator<PropsTab>();
 const AppStack = createNativeStackNavigator<PropsStack>();
 
+// const AppStaks: React.FC = () => {
+//   return (
+//     <AppStack.Navigator
+//       initialRouteName="Home"
+//       screenOptions={{
+//         headerShown: false,
+//       }}
+//     >
+
+//       <AppStack.Screen
+//         name="Credencial"
+//         component={Credencial}
+//       />
+//       <AppStack.Screen
+//         name="EsqueceuSenha"
+//         component={EsqueceuSenha}
+//       />
+//       <AppStack.Screen
+//         name="Verificacao"
+//         component={Verificacao}
+//       />
+//       <AppStack.Screen
+//         name="EnviarCod"
+//         component={EnviarCod}
+//       />
+//       <AppStack.Screen
+//         name="AlterarSenha"
+//         component={AlterarSenha}
+//       />
+//       <AppStack.Screen
+//         name="Foto"
+//         component={Foto}
+//       />
+//       <AppStack.Screen
+//         name="SenhaRedefinida"
+//         component={SenhaRedefinida}
+//       />
+
+//       <AppStack.Screen
+//         name="PrimeiroAcesso"
+//         component={PrimeiroAcesso}
+//       />
+
+//       <AppStack.Screen
+//         name="ChecklistUsuario"
+//         component={ChecklistUsuario}
+//       />
+//       <AppStack.Screen
+//         name="SolicitarEpi"
+//         component={SolicitarEpi}
+//         options={{ headerTitle: "Solicitar EPI", headerShown: true }}
+//       />
+//       <AppStack.Screen
+//         name="SolicitarEquipamento"
+//         component={SolicitarEquipamento}
+//         options={{ headerTitle: "Solicitar Equipamento", headerShown: true }}
+//       />
+//       {/* Adicione outras telas aqui */}
+//     </AppStack.Navigator>
+//   );
+// };
+
 const AppRoutes: React.FC = () => {
-  return (
-    <AppStack.Navigator
-      initialRouteName="Login"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <AppStack.Screen
-        name="HoleriteTabs"
-        component={AppTabsScreen}
-      />
-      <AppStack.Screen
-        name="Credencial"
-        component={Credencial}
-      />
-      <AppStack.Screen
-        name="EsqueceuSenha"
-        component={EsqueceuSenha}
-      />
-      <AppStack.Screen
-        name="Verificacao"
-        component={Verificacao}
-      />
-      <AppStack.Screen
-        name="EnviarCod"
-        component={EnviarCod}
-      />
-      <AppStack.Screen
-        name="AlterarSenha"
-        component={AlterarSenha}
-      />
-      <AppStack.Screen
-        name="Foto"
-        component={Foto}
-      />
-      <AppStack.Screen
-        name="SenhaRedefinida"
-        component={SenhaRedefinida}
-      />
-
-      <AppStack.Screen
-        name="PrimeiroAcesso"
-        component={PrimeiroAcesso}
-      />
-
-      <AppStack.Screen
-        name="Login"
-        component={Login}
-      />
-      <AppStack.Screen
-        name="ChecklistUsuario"
-        component={ChecklistUsuario}
-      />
-      <AppStack.Screen
-        name="SolicitarEpi"
-        component={SolicitarEpi}
-        options={{ headerTitle: "Solicitar EPI", headerShown: true }}
-      />
-      <AppStack.Screen
-        name="SolicitarEquipamento"
-        component={SolicitarEquipamento}
-        options={{ headerTitle: "Solicitar Equipamento", headerShown: true }}
-      />
-      {/* Adicione outras telas aqui */}
-    </AppStack.Navigator>
-  );
-};
-
-const AppTabsScreen: React.FC = () => {
+  const { onLogout } = useAuth()
   return (
     <AppTabs.Navigator
       initialRouteName="Holerite"
@@ -110,9 +106,12 @@ const AppTabsScreen: React.FC = () => {
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
         },
+        headerRight: () => (
+          <Button title="sair" onPress={onLogout} />
+        )
       }}
     >
-      <AppTabs.Screen
+    {/* <AppTabs.Screen
         name="EPI"
         component={Epi}
         options={{
@@ -133,7 +132,7 @@ const AppTabsScreen: React.FC = () => {
             }
           }
         }}
-      />
+      /> */}
       <AppTabs.Screen
         name="Holerite"
         component={Holerites}
@@ -157,7 +156,7 @@ const AppTabsScreen: React.FC = () => {
           }
         }}
       />
-      <AppTabs.Screen
+      {/* <AppTabs.Screen
         name="Equipamento"
         component={Equipamento}
         options={{
@@ -190,19 +189,19 @@ const AppTabsScreen: React.FC = () => {
             if (focused) {
               return (
                 <View  >
-<MaterialCommunityIcons name="file-check-outline" size={size} color="#1E1685" />
+                  <MaterialCommunityIcons name="file-check-outline" size={size} color="#1E1685" />
                 </View>
               )
             } else {
               return (
                 <View >
-<MaterialCommunityIcons name="file-check-outline" size={size} color="#888" />
+                  <MaterialCommunityIcons name="file-check-outline" size={size} color="#888" />
                 </View>
               )
             }
           }
         }}
-      />
+      /> */}
     </AppTabs.Navigator>
   )
 }
