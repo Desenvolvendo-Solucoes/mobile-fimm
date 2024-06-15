@@ -43,8 +43,9 @@ export type PropsStack = PropsTab & {
     Credencial: {    
         cpf: string;
         matricula: string;}
-    Verificacao: undefined;
-    EnviarCod: undefined;
+    Verificacao:{
+        matricula: string
+    };
     AlterarSenha: undefined;
     SenhaRedefinida: undefined;
     Foto: undefined;
@@ -74,7 +75,6 @@ export type RouteNames =
     | "PrimeiroAcesso"
     | "Credencial"
     | "Verificacao"
-    | "EnviarCod"
     | "AlterarSenha" 
     | "SenhaRedefinida"
     | "Foto";

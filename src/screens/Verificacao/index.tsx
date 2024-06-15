@@ -1,27 +1,43 @@
 import React, { useState,useRef } from "react";
 import { Text, TouchableOpacity, View,TextInput,  } from "react-native";
+import Toast from 'react-native-toast-message';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 
 import { useNavigation } from '@react-navigation/native';
 import { PropsStack } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useAuth } from "src/context/AuthContext";
 
 //COMPONENTS
 
 import BtnVoltar from "../../components/BtnVoltar";
 
+// Definindo a interface para o parâmetro da rota
+interface RouteParams {
+  matricula: string;
+}
+// Definindo o tipo específico para a rota
+type VerificacaoRouteProp = RouteProp<{ Verificacao: RouteParams }, 'Verificacao'>;
 
 const Verificacao: React.FC = () => {
-  const [matricula, setMatricula] = useState<string>()
+
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
-  const [code, setCode] = useState(['', '', '', '']);
+  const [code1, setCode1] = useState(['', '', '', '']);
+  const [code, setCode] = useState('');
   const textInputRefs = useRef([]);
+  const route = useRoute<VerificacaoRouteProp>();
+  const {matricula} = route.params;
+  const { onValidaResetCode } = useAuth()
+
+
+
   const handleInputChange = (index, value) => {
-    const newCode = [...code];
+    const newCode = [...code1];
     
     newCode[index] = value;
 
-    setCode(newCode);
+    setCode1(newCode);
         // Move focus to the next TextInput if available
         const nextIndex = index + 1;
         if (nextIndex < textInputRefs.current.length) {
@@ -30,10 +46,58 @@ const Verificacao: React.FC = () => {
 
   };
 
+  const ValidaResetCode = async () => {
+    setCode1(code1.map(item => item.replace(/\s/g, '')))
+    setCode(code1.join(''))
+    onValidaResetCode(matricula,code).then((result)=>{
+      console.log(result);
+      
+      if(result ===true){
+        navigation.navigate('AlterarSenha')
+      }
+    }).catch((err) => {
+      switch (err.msg.status) {
+        case 401:
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Código inválido',
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 60,
+            bottomOffset: 30,
+          })
+          break;
+          case 404:
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Matricula nao encontrada',
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 60,
+            bottomOffset: 30,
+          })
+          break;
+        default:
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Erro não identificado',
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 60,
+            bottomOffset: 30,
+          })
+          break;
+      }
+    })
+  } 
+
   return (
     <View className="flex flex-1 justify-start items-center p-6">
       <View className="absolute left-5 top-20"> 
-      <BtnVoltar page={'EnviarCod'}/>
+      <BtnVoltar page={'EsqueceuSenha'}/>
       </View>
       <View className="items-start mt-16">
         <Text className="text-primary font-bold text-2xl mt-14">Verificacao</Text>
@@ -42,7 +106,7 @@ const Verificacao: React.FC = () => {
         >Foi enviado um código de verificação para o e-mail <Text className="font-bold">exe****@gmai***.</Text></Text>
       <View 
       className="flex-row justify-center items-center w-full mt-24"     >
-        {code.map((digit, index) => (
+        {code1.map((digit, index) => (
           <TextInput
             key={index}
             ref={(ref) => (textInputRefs.current[index] = ref)}
@@ -64,10 +128,10 @@ const Verificacao: React.FC = () => {
       <Text className="mt-4 p-2">Não recebi o código. <Text className="font-bold text-primary" onPress={()=>{}}>Reenviar</Text></Text>
       <TouchableOpacity 
       className="justify-center w-80 h-14 bg-primary rounded-full mt-10 items-center"
-      onPress={()=>{ navigation.navigate('AlterarSenha')}}>
+      onPress={()=>{ ValidaResetCode()}}>
         <Text className="text-white font-bold">Confirmar código</Text>
       </TouchableOpacity>
-      
+      <Toast />
     </View>
     </View>
   )

@@ -71,8 +71,8 @@ const PrimeiroAcesso: React.FC = () => {
   return (
     <View className="flex flex-1 justify-center items-center p-6" >
       <Image className="w-48 h-16 mb-8" source={require('../../../assets/loginImage.png')} resizeMode="stretch" />
-      <Input value={matricula} setValue={setMatricula} placeholder="Matricula" />
-      <Input value={cpf} setValue={setCpf} placeholder="CPF" />
+      <Input value={matricula} setValue={setMatricula} placeholder="Matricula" matricula={true}/>
+      <Input value={cpf} setValue={setCpf} placeholder="CPF" cpf={true} />
       <TouchableOpacity
         className="justify-center w-80 h-14 bg-primary rounded-full mt-10"
         onPress={verificaUsuario}

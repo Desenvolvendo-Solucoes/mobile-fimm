@@ -10,7 +10,6 @@ import Foto from "../components/Foto";
 import AlterarSenha from "../screens/AlterarSenha";
 import ChecklistUsuario from "../screens/ChecklistUsuario";
 import Credencial from "../screens/Credencial";
-import EnviarCod from "../screens/EnviarCod";
 import EsqueceuSenha from "../screens/EsqueceuSenha";
 import PrimeiroAcesso from "../screens/PrimeiroAcesso";
 import SenhaRedefinida from "../screens/SenhaRedefinida";
@@ -45,10 +44,6 @@ const AuthRoutes: React.FC = () => {
             <AppStack.Screen
                 name="Verificacao"
                 component={Verificacao}
-            />
-            <AppStack.Screen
-                name="EnviarCod"
-                component={EnviarCod}
             />
             <AppStack.Screen
                 name="AlterarSenha"
