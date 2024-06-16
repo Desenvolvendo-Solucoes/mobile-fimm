@@ -16,6 +16,7 @@ interface AuthProp {
   onGetUsersCadastrado?: (cpf: string, matricula: string) => Promise<any>
   onSolicitaResetSenha?: (matricula: string) => Promise<any>
   onValidaResetCode?: (matricula:string, code:string)=> Promise<any>
+  onResetSenha?: (matricula: string, senha: string, code: string) => Promise<any>
 
 }
 
@@ -331,6 +332,23 @@ export const AuthProvider = ({ children }: any) => {
 
     }
 
+    const resetSenha = async ( matricula: string,code:string,senha:string): Promise<any> => {
+      return new Promise(async (resolve, reject) => {
+  
+        try {
+          const result = await axios.post(`${API_URL}/auth/resetSenha`, null, { params: {matricula,code,senha} })
+          resolve(result.data)
+  
+        } catch (e) {
+          reject({ error: true, msg: (e as any).response })
+        }
+  
+      })
+
+    }
+
+
+
   const value = {
     onRegister: register,
     onLogin: login,
@@ -348,6 +366,7 @@ export const AuthProvider = ({ children }: any) => {
     onGetUsersCadastrado: getUsersCadastrado,
     onSolicitaResetSenha: solicitaResetSenha,
     onValidaResetCode: validaResetCode,
+    onResetSenha: resetSenha,
     authState: authState,
   }
 

@@ -46,7 +46,10 @@ export type PropsStack = PropsTab & {
     Verificacao:{
         matricula: string
     };
-    AlterarSenha: undefined;
+    AlterarSenha: {
+        matricula: string;
+        code: string;
+    };
     SenhaRedefinida: undefined;
     Foto: undefined;
     ChecklistUsuario: undefined;

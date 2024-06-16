@@ -24,7 +24,7 @@ const Verificacao: React.FC = () => {
 
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
   const [code1, setCode1] = useState(['', '', '', '']);
-  const [code, setCode] = useState('');
+
   const textInputRefs = useRef([]);
   const route = useRoute<VerificacaoRouteProp>();
   const {matricula} = route.params;
@@ -48,12 +48,14 @@ const Verificacao: React.FC = () => {
 
   const ValidaResetCode = async () => {
     setCode1(code1.map(item => item.replace(/\s/g, '')))
-    setCode(code1.join(''))
+    const code = code1.join('')
+    console.log(code);
+    
     onValidaResetCode(matricula,code).then((result)=>{
       console.log(result);
       
       if(result ===true){
-        navigation.navigate('AlterarSenha')
+        navigation.navigate('AlterarSenha',{matricula, code})
       }
     }).catch((err) => {
       switch (err.msg.status) {

@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Alert,
   Modal,
   Dimensions,
   StatusBar,
@@ -17,6 +16,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import LottieView from "lottie-react-native";
 import { mesesString } from "../../context/config";
 import { useHeaderHeight } from "@react-navigation/elements";
+import Toast from 'react-native-toast-message';
 
 
 
@@ -73,7 +73,15 @@ const Holerites: React.FC = () => {
       if (newStatus === 'granted') {
         setPermissionGranted(true);
       } else {
-        Alert.alert('Permissão negada', 'Para fazer download de arquivos, é necessário conceder permissão.');
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Para fazer download de arquivos, é necessário conceder permissão',
+          visibilityTime: 3000,
+          autoHide: true,
+          topOffset: 60,
+          bottomOffset: 30,
+        })
       }
     } else {
       setPermissionGranted(true);
@@ -82,12 +90,28 @@ const Holerites: React.FC = () => {
 
   const handleDownload = async () => {
     if (!url) {
-      Alert.alert('Erro', 'Nenhuma URL disponível para download.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Nenhum holerite disponível para download.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       return;
     }
 
     if (!permissionGranted) {
-      Alert.alert('Permissão negada', 'Para fazer download de arquivos, é necessário conceder permissão.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Para fazer download de arquivos, é necessário conceder permissão',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       return;
     }
 
@@ -97,9 +121,27 @@ const Holerites: React.FC = () => {
       const fileUri = FileSystem.cacheDirectory + "holerite.jpg";
       await FileSystem.downloadAsync(url, fileUri);
       await MediaLibrary.saveToLibraryAsync(fileUri);
-      Alert.alert('Sucesso', 'Arquivo salvo com sucesso na galeria.');
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Arquivo salvo com sucesso na galeria.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
+
     } catch (error) {
-      Alert.alert('Erro', 'Ocorreu um erro durante o download do arquivo. Por favor, tente novamente mais tarde.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Ocorreu um erro durante o download do arquivo. Por favor, tente novamente mais tarde.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
+
       console.error(error);
     } finally {
       setDownloadStatus(false);
@@ -202,6 +244,7 @@ const Holerites: React.FC = () => {
       <Modal visible={imageOpen} transparent={true}>
         <ImageViewer imageUrls={[{ url: url }]} onSwipeDown={() => setImageOpen(false)} enableSwipeDown />
       </Modal>
+      <Toast/>
     </View >
   );
 };

@@ -36,7 +36,15 @@ const Login: React.FC = () => {
 
     const result = await onLogin!(email, senha)
     if (result && result.error) {
-      alert(result.msg)
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Email ou senha incorrecto',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
     }
   }
 
