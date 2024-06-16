@@ -29,11 +29,28 @@ const AlterarSenha: React.FC = () => {
   const route = useRoute<VerificacaoRouteProp>();
   const {matricula,code} = route.params;
 
+  const isPasswordStrong = (senha: string) => {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return strongPasswordRegex.test(senha);
+  };
+
   function sleep(ms:any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
 const ResetSenha = async () => {
+  if (!isPasswordStrong(senha)) {
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'A senha deve ter pelo menos 8 caracteres, incluindo :',
+      text2: 'letras maiúsculas, minúsculas, números e caracteres especiais.',
+      visibilityTime: 3000,
+      autoHide: true,
+      topOffset: 60,
+      bottomOffset: 30,
+    })
+  }else{
   if(senha === repitaSenha){
     onResetSenha(matricula,code,senha).then(async() =>{
       Toast.show({
@@ -98,6 +115,7 @@ const ResetSenha = async () => {
       bottomOffset: 30,
     })
   }
+}
 }
 
 

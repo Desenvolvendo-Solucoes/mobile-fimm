@@ -73,7 +73,8 @@ const Credencial: React.FC = () => {
       Toast.show({
         type: 'error',
         position: 'top',
-        text1: 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.',
+        text1: 'A senha deve ter pelo menos 8 caracteres, incluindo :',
+        text2: 'letras maiúsculas, minúsculas, números e caracteres especiais.',
         visibilityTime: 3000,
         autoHide: true,
         topOffset: 60,
