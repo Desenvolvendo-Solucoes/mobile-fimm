@@ -20,7 +20,6 @@ import EsqueceuSenha from "../screens/EsqueceuSenha";
 import PrimeiroAcesso from "../screens/PrimeiroAcesso";
 import Credencial from "../screens/Credencial";
 import Verificacao from "../screens/Verificacao";
-import EnviarCod from "../screens/EnviarCod";
 import AlterarSenha from "../screens/AlterarSenha";
 import SenhaRedefinida from "../screens/SenhaRedefinida";
 import CheckList from "../screens/CheckList";
@@ -55,10 +54,6 @@ const AppStack = createNativeStackNavigator<PropsStack>();
 //       <AppStack.Screen
 //         name="Verificacao"
 //         component={Verificacao}
-//       />
-//       <AppStack.Screen
-//         name="EnviarCod"
-//         component={EnviarCod}
 //       />
 //       <AppStack.Screen
 //         name="AlterarSenha"

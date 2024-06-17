@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Alert } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { PropsStack } from "../../types";
+import Toast from 'react-native-toast-message';
 
 // COMPONENTS
 import Input from "../../components/Input";
@@ -44,16 +45,41 @@ const Credencial: React.FC = () => {
     const repitaEmailLowerCase = repitaEmail.toLowerCase();
 
     if (senha !== repitaSenha || emailLowerCase  !== repitaEmailLowerCase) {
-      Alert.alert('Erro', 'As senhas ou Email não coincidem.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'As senhas ou Email não coincidem.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       return;
     }
     if (!isEmailValid(emailLowerCase)) {
-      Alert.alert('Erro', 'Por favor, insira um e-mail válido.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Por favor, insira um e-mail válido.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       return;
     }
 
     if (!isPasswordStrong(senha)) {
-      Alert.alert('Erro', 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'A senha deve ter pelo menos 8 caracteres, incluindo :',
+        text2: 'letras maiúsculas, minúsculas, números e caracteres especiais.',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       return;
     }
     const result = await onPrimeiroAcesso!(cpf, matricula, emailLowerCase, senha);
@@ -62,9 +88,25 @@ const Credencial: React.FC = () => {
     
     
     if (result && result.error) {
-      Alert.alert('Erro',result.msg);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: result.msg,
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
     } else {
-      Alert.alert('Usuario cadastrado com sucesso');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Usuario cadastrado com sucesso',
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        bottomOffset: 30,
+      })
       navigation.navigate('Login');
     }
   };
@@ -88,6 +130,7 @@ const Credencial: React.FC = () => {
       >
         <Text className="text-white font-bold">Salvar</Text>
       </TouchableOpacity>
+      <Toast/>
     </View>
   );
 };

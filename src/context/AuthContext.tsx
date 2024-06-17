@@ -14,11 +14,14 @@ interface AuthProp {
   onGetHoleriteFile?: (mes: string, ano: string) => Promise<any>
   onPrimeiroAcesso?: (cpf: string, matricula: string, email: string, senha: string) => Promise<any>
   onGetUsersCadastrado?: (cpf: string, matricula: string) => Promise<any>
+  onSolicitaResetSenha?: (matricula: string) => Promise<any>
+  onValidaResetCode?: (matricula:string, code:string)=> Promise<any>
+  onResetSenha?: (matricula: string, senha: string, code: string) => Promise<any>
 
 }
 
 const TOKEN_KEY = 'my-jwt'
-export const API_URL = process.env.EXPO_PUBLIC_API_URL
+export const API_URL = 'https://fimm-api.8corp.com.br'
 const AuthContext = createContext<AuthProp>({})
 
 export const useAuth = () => {
@@ -300,6 +303,52 @@ export const AuthProvider = ({ children }: any) => {
     })
   }
 
+  const solicitaResetSenha = async ( matricula: string): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+
+      try {
+        const result = await axios.post(`${API_URL}/auth/solicitaResetSenha`, null, { params: {matricula} })
+        resolve(result.data)
+
+      } catch (e) {
+        reject({ error: true, msg: (e as any).response })
+      }
+
+    })
+  }
+
+    const validaResetCode = async ( matricula: string,code:string): Promise<any> => {
+      return new Promise(async (resolve, reject) => {
+  
+        try {
+          const result = await axios.post(`${API_URL}/auth/validaResetCode`, null, { params: {matricula,code} })
+          resolve(result.data)
+  
+        } catch (e) {
+          reject({ error: true, msg: (e as any).response })
+        }
+  
+      })
+
+    }
+
+    const resetSenha = async ( matricula: string,code:string,senha:string): Promise<any> => {
+      return new Promise(async (resolve, reject) => {
+  
+        try {
+          const result = await axios.post(`${API_URL}/auth/resetSenha`, null, { params: {matricula,code,senha} })
+          resolve(result.data)
+  
+        } catch (e) {
+          reject({ error: true, msg: (e as any).response })
+        }
+  
+      })
+
+    }
+
+
+
   const value = {
     onRegister: register,
     onLogin: login,
@@ -315,6 +364,9 @@ export const AuthProvider = ({ children }: any) => {
     onGetHoleriteFile: getHoleriteFile,
     onPrimeiroAcesso: primeiroAcesso,
     onGetUsersCadastrado: getUsersCadastrado,
+    onSolicitaResetSenha: solicitaResetSenha,
+    onValidaResetCode: validaResetCode,
+    onResetSenha: resetSenha,
     authState: authState,
   }
 
