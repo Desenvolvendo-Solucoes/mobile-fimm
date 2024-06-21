@@ -18,8 +18,6 @@ import { mesesString } from "../../context/config";
 import { useHeaderHeight } from "@react-navigation/elements";
 import Toast from 'react-native-toast-message';
 
-
-
 const Holerites: React.FC = () => {
   const [url, setUrl] = useState('');
   const [naoGerado, setNaoGerado] = useState(false);

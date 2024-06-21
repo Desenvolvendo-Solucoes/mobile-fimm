@@ -15,13 +15,12 @@ interface AuthProp {
   onPrimeiroAcesso?: (cpf: string, matricula: string, email: string, senha: string) => Promise<any>
   onGetUsersCadastrado?: (cpf: string, matricula: string) => Promise<any>
   onSolicitaResetSenha?: (matricula: string) => Promise<any>
-  onValidaResetCode?: (matricula:string, code:string)=> Promise<any>
+  onValidaResetCode?: (matricula: string, code: string) => Promise<any>
   onResetSenha?: (matricula: string, senha: string, code: string) => Promise<any>
-
 }
 
 const TOKEN_KEY = 'my-jwt'
-export const API_URL = 'https://fimm-api.8corp.com.br'
+export const API_URL = 'http://192.168.1.105:3000'
 const AuthContext = createContext<AuthProp>({})
 
 export const useAuth = () => {
@@ -303,11 +302,11 @@ export const AuthProvider = ({ children }: any) => {
     })
   }
 
-  const solicitaResetSenha = async ( matricula: string): Promise<any> => {
+  const solicitaResetSenha = async (matricula: string): Promise<any> => {
     return new Promise(async (resolve, reject) => {
 
       try {
-        const result = await axios.post(`${API_URL}/auth/solicitaResetSenha`, null, { params: {matricula} })
+        const result = await axios.post(`${API_URL}/auth/solicitaResetSenha`, null, { params: { matricula } })
         resolve(result.data)
 
       } catch (e) {
@@ -317,35 +316,35 @@ export const AuthProvider = ({ children }: any) => {
     })
   }
 
-    const validaResetCode = async ( matricula: string,code:string): Promise<any> => {
-      return new Promise(async (resolve, reject) => {
-  
-        try {
-          const result = await axios.post(`${API_URL}/auth/validaResetCode`, null, { params: {matricula,code} })
-          resolve(result.data)
-  
-        } catch (e) {
-          reject({ error: true, msg: (e as any).response })
-        }
-  
-      })
+  const validaResetCode = async (matricula: string, code: string): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
 
-    }
+      try {
+        const result = await axios.post(`${API_URL}/auth/validaResetCode`, null, { params: { matricula, code } })
+        resolve(result.data)
 
-    const resetSenha = async ( matricula: string,code:string,senha:string): Promise<any> => {
-      return new Promise(async (resolve, reject) => {
-  
-        try {
-          const result = await axios.post(`${API_URL}/auth/resetSenha`, null, { params: {matricula,code,senha} })
-          resolve(result.data)
-  
-        } catch (e) {
-          reject({ error: true, msg: (e as any).response })
-        }
-  
-      })
+      } catch (e) {
+        reject({ error: true, msg: (e as any).response })
+      }
 
-    }
+    })
+
+  }
+
+  const resetSenha = async (matricula: string, code: string, senha: string): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+
+      try {
+        const result = await axios.post(`${API_URL}/auth/resetSenha`, null, { params: { matricula, code, senha } })
+        resolve(result.data)
+
+      } catch (e) {
+        reject({ error: true, msg: (e as any).response })
+      }
+
+    })
+
+  }
 
 
 
