@@ -9,7 +9,6 @@ import AuthRoutes from './auth.routes'
 
 const Routes = () => {
   const { authState, onLogout } = useAuth()
-  console.log(authState.authenticated);
 
   return authState?.authenticated ? <AppRoutes /> : <AuthRoutes />
 }

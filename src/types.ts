@@ -35,6 +35,7 @@ export type PropsTab = {
 
 export type PropsStack = PropsTab & {
     SolicitarEpi: undefined;
+    Splash:undefined;
     SolicitarEquipamento: undefined;
     HoleriteTabs: undefined;
     Login: undefined;

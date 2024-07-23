@@ -1,6 +1,6 @@
-name: Build App
+name: Teste Buil App
 on: 
-  push:
+  pull_request:
     branches:
       - main
 jobs:

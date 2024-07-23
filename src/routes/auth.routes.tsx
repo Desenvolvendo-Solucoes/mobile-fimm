@@ -1,10 +1,5 @@
 import * as React from "react";
 import Login from "../screens/Login";
-//import Splash from "../pages/Splash";
-//import EsqueceuSenha from "../pages/EsqueceuSenha";
-//import Verificacao from "../pages/PrimeiroAcesso/Verificacao";
-//import Cadastro from "../pages/PrimeiroAcesso/Cadastro";
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Foto from "../components/Foto";
 import AlterarSenha from "../screens/AlterarSenha";
@@ -17,6 +12,7 @@ import SolicitarEpi from "../screens/SolicitarEpi";
 import SolicitarEquipamento from "../screens/SolicitarEquipamento";
 import Verificacao from "../screens/Verificacao";
 import { PropsStack } from "../types";
+import Splash from "src/screens/Splash";
 
 
 const AppStack = createNativeStackNavigator<PropsStack>();
@@ -24,7 +20,7 @@ const AppStack = createNativeStackNavigator<PropsStack>();
 const AuthRoutes: React.FC = () => {
     return (
         <AppStack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Splash"
             screenOptions={{
                 headerShown: false,
             }}
@@ -67,17 +63,23 @@ const AuthRoutes: React.FC = () => {
                 name="ChecklistUsuario"
                 component={ChecklistUsuario}
             />
+
             <AppStack.Screen
                 name="SolicitarEpi"
                 component={SolicitarEpi}
                 options={{ headerTitle: "Solicitar EPI", headerShown: true }}
             />
+
             <AppStack.Screen
                 name="SolicitarEquipamento"
                 component={SolicitarEquipamento}
                 options={{ headerTitle: "Solicitar Equipamento", headerShown: true }}
             />
-            {/* Adicione outras telas aqui */}
+
+            <AppStack.Screen
+                name="Splash"
+                component={Splash}
+            />
         </AppStack.Navigator>
     );
 
