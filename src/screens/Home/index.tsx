@@ -36,8 +36,6 @@ const Holerites: React.FC = () => {
 
   useEffect(() => {
     checkPermissions();
-    console.log(url.length);
-
     // Verifica se a URL está vazia e atualiza o estado 'naoGerado' em conformidade
     if (url.length === 0) {
       setNaoGerado(true);
@@ -242,7 +240,7 @@ const Holerites: React.FC = () => {
       <Modal visible={imageOpen} transparent={true}>
         <ImageViewer imageUrls={[{ url: url }]} onSwipeDown={() => setImageOpen(false)} enableSwipeDown />
       </Modal>
-      <Toast/>
+      <Toast />
     </View >
   );
 };
