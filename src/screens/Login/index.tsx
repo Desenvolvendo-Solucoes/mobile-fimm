@@ -4,7 +4,7 @@ import Input from "../../components/Input";
 import { CheckBox } from 'react-native-elements'
 import Loading from "../../components/Loading";
 import Toast from 'react-native-toast-message';
-
+import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import { PropsStack } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -66,7 +66,6 @@ const Login: React.FC = () => {
       </TouchableOpacity>
       <TouchableOpacity
         className={`w-80 h-14 ${isChecked === true ? 'bg-primary' : 'bg-slate-700'} rounded-full flex justify-center items-center mb-5`}
-        onPress={login}
         onPress={login}
         disabled={isChecked === true ? false : true}
       >
