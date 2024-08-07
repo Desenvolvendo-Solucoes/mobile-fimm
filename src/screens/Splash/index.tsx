@@ -12,6 +12,7 @@ const Splash: React.FC = () => {
   const { height, width } = Dimensions.get('window')
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
   const NetInfo = useNetInfo()
+
   const [reload, setReload] = useState(0)
 
   const validadeInternetAccess = () => {

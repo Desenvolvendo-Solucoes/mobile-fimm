@@ -23,8 +23,6 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
     }
   }, []);
 
-
-
   const selecionaMes = () => {
     // Verifica se fullDate está inicializado
     if (!fullDate) {
@@ -39,6 +37,9 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
     let mes: string = (fullDate.getMonth()).toString();
     let ano: string = fullDate.getFullYear().toString();
 
+    console.log(`${mes} - ${ano}`);
+
+
     // Recupera o arquivo e define a URL da imagem
     onGetHoleriteFile(mes, ano)
       .then((file: string) => {
@@ -49,8 +50,6 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
         console.error("Falha ao recuperar o arquivo:", err);
       });
   };
-
-
 
   return (
 

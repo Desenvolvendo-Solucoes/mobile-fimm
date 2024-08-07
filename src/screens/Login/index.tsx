@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import Input from "../../components/Input";
 import { CheckBox } from 'react-native-elements'
@@ -12,7 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 
 
 const Login: React.FC = () => {
-  const { onLogin } = useAuth()
+  const { onLogin, validatToken } = useAuth()
   const [email, setEmail] = useState<string>()
   const [senha, setSenha] = useState<string>()
   const [isChecked, setIsChecked] = useState(false)
@@ -30,11 +30,12 @@ const Login: React.FC = () => {
 
   const primeiroAcesso = () => {
     navigation.navigate('PrimeiroAcesso');
-  };
+  }
 
   const login = async () => {
+    const { coords } = await Location.getCurrentPositionAsync()
 
-    const result = await onLogin!(email, senha)
+    const result = await onLogin!(email, senha, coords)
     if (result && result.error) {
       Toast.show({
         type: 'error',
@@ -47,6 +48,10 @@ const Login: React.FC = () => {
       })
     }
   }
+
+  useEffect(() => {
+    validatToken()
+  }, [])
 
   return (
     <View className="flex flex-1 justify-center items-center p-6" >
@@ -61,6 +66,7 @@ const Login: React.FC = () => {
       </TouchableOpacity>
       <TouchableOpacity
         className={`w-80 h-14 ${isChecked === true ? 'bg-primary' : 'bg-slate-700'} rounded-full flex justify-center items-center mb-5`}
+        onPress={login}
         onPress={login}
         disabled={isChecked === true ? false : true}
       >

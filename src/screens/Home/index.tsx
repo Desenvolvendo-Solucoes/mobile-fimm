@@ -34,16 +34,6 @@ const Holerites: React.FC = () => {
   const navbarHeight =
     screenHeight - windowHeight + StatusBar.currentHeight + headerHeight + 48;
 
-  useEffect(() => {
-    checkPermissions();
-    // Verifica se a URL está vazia e atualiza o estado 'naoGerado' em conformidade
-    if (url.length === 0) {
-      setNaoGerado(true);
-    } else {
-      setNaoGerado(false);
-    }
-  }, [url]);
-
   const renderDownloadIcon = () => {
     if (downloadStatus) {
       return (
@@ -158,6 +148,21 @@ const Holerites: React.FC = () => {
       )
     }
   }
+
+  useEffect(() => {
+    checkPermissions();
+    // Verifica se a URL está vazia e atualiza o estado 'naoGerado' em conformidade
+    if (url.length === 0) {
+      setNaoGerado(true);
+    } else {
+      setNaoGerado(false);
+    }
+  }, [url]);
+
+  useEffect(() => {
+
+  }, [])
+
 
   return (
     <View style={{ flex: 1 }}>

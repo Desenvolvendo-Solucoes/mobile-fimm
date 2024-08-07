@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store'
+import * as Location from 'expo-location'
 
 interface AuthProp {
+
   authState?: { token: string | null; authenticated: boolean | null }
   onRegister?: (email: string, password: string) => Promise<any>
-  onLogin?: (email: string, password: string) => Promise<any>
+  onLogin?: (email: string, password: string, coords: Location.LocationObjectCoords) => Promise<any>
   onLogout?: () => Promise<any>
   onGetEpiSolicitacoes?: () => Promise<any>
   onGetEquipamentoSolicitacoes?: () => Promise<any>
@@ -17,6 +19,7 @@ interface AuthProp {
   onValidaResetCode?: (matricula: string, code: string) => Promise<any>
   onResetSenha?: (matricula: string, senha: string, code: string) => Promise<any>
   validatToken?: () => Promise<unknown>
+  loadToken?: () => Promise<void>
 }
 
 const TOKEN_KEY = 'my-jwt'
@@ -39,31 +42,33 @@ export const AuthProvider = ({ children }: any) => {
     authenticated: null
   })
 
-  useEffect(() => {
-    const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY)
-      if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        console.log(`token: ${token}`);
+  const loadToken = async () => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY)
+    console.log(token);
 
-        validaToken().then((res: any) => {
-          console.log(res);
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      validaToken().then((res: any) => {
+        console.log(`validaToken: ${res.statusCode}`);
 
-          if (res.statusCode === 401) {
-            setAuthState({ token: null, authenticated: false })
-          } else {
-            setAuthState({ token: token, authenticated: true })
-          }
-        }).catch((e) => {
-
-
+        if (res.statusCode === 401) {
           setAuthState({ token: null, authenticated: false })
-        })
-      } else {
+        } else {
+          setAuthState({ token: token, authenticated: true })
+        }
+      }).catch((e) => {
         setAuthState({ token: null, authenticated: false })
-      }
+      })
+    } else {
+      setAuthState({ token: null, authenticated: false })
     }
+  }
+
+  useEffect(() => {
+    console.log('carregando o token ');
+
     loadToken()
+
   }, [])
 
   const register = async (email: string, senha: string) => {
@@ -74,18 +79,17 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
 
-  const login = async (email: string, senha: string) => {
+  const login = async (email: string, senha: string, coords: Location.LocationObjectCoords) => {
     try {
-      const result = await instance.post(`/auth/loginmobile`, null, { params: { email, senha } })
+      const result = await instance.post(`/auth/loginmobile`, null, { params: { email, senha, coords } })
 
       setAuthState({
         token: result.data.access_token,
         authenticated: true
       })
-
-      axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access_token}`
-
       await SecureStore.setItemAsync(TOKEN_KEY, result.data.access_token)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.access_token}`
+      loadToken()
 
       return result
 
@@ -199,11 +203,14 @@ export const AuthProvider = ({ children }: any) => {
   const getHoleriteFile = async (mes: string, ano: string): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
+        const token = await SecureStore.getItemAsync(TOKEN_KEY)
+
         const result = await instance.get(`/holerite/file`, {
-          params: { mes: mes, ano: ano }
+          params: { mes: mes, ano: ano }, headers: { 'Authorization': 'Bearer ' + token }
         })
         resolve(result.data);
       } catch (e) {
+        console.error(e)
         reject({ error: (e as any).response.data.error, code: (e as any).response.data.code })
       }
     })
@@ -309,7 +316,8 @@ export const AuthProvider = ({ children }: any) => {
     onValidaResetCode: validaResetCode,
     onResetSenha: resetSenha,
     authState: authState,
-    validatToken: validaToken
+    validatToken: validaToken,
+    loadToken: loadToken
   }
 
   return <AuthContext.Provider value={value} >{children}</AuthContext.Provider>
