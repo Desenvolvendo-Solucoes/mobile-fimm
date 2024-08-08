@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Fimm Brasil",
+    "name": "Fimm Brasil App",
     "slug": "fimm_app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -31,7 +31,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permitir que $(PRODUCT_NAME) use sua localização."
+        }
+      ]
     ],
     "extra": {
       "router": {

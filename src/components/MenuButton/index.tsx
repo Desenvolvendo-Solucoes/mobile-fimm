@@ -37,8 +37,6 @@ const MenuButton: React.FC<MenuButtonProps> = ({ subtrai, active, filter, meses,
     let mes: string = (fullDate.getMonth()).toString();
     let ano: string = fullDate.getFullYear().toString();
 
-    console.log(`${mes} - ${ano}`);
-
 
     // Recupera o arquivo e define a URL da imagem
     onGetHoleriteFile(mes, ano)

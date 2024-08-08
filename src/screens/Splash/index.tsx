@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions, StatusBar, Alert } from 'react-native'
+import { View, Dimensions, StatusBar, Alert, Linking } from 'react-native'
 import LottieView from "lottie-react-native";
 import { useAuth } from 'src/context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PropsStack } from 'src/types';
 import { useNetInfo } from '@react-native-community/netinfo'
+import * as Location from 'expo-location'
 
 const Splash: React.FC = () => {
-  const { authState, validatToken } = useAuth()
+  const { authState, loadToken } = useAuth()
   const { height, width } = Dimensions.get('window')
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
   const NetInfo = useNetInfo()
@@ -17,8 +18,7 @@ const Splash: React.FC = () => {
 
   const validadeInternetAccess = () => {
     console.log(NetInfo.isConnected);
-    if (NetInfo.isConnected) {
-      navigation.navigate('Login')
+    if (!NetInfo.isConnected) {
     }
     else {
       Alert.alert('Acesso a internet', 'É necessário ter acesso a internet para acessar o aplicativo', [
@@ -31,7 +31,23 @@ const Splash: React.FC = () => {
   }
 
   useEffect(() => {
-    if (NetInfo.isConnected === null) console.log(NetInfo.isConnected);
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissões de localização', 'É necessário conceder permissões de localização para acessar o aplicativo', [
+          {
+            text: 'Abrir configurações',
+            onPress: () => {
+              Linking.openSettings()
+            }
+          },
+        ])
+      } else {
+        await loadToken()
+        navigation.navigate('Login')
+      }
+
+    })()
   }, [reload, authState])
 
   return (
@@ -46,8 +62,7 @@ const Splash: React.FC = () => {
         }
         autoPlay
         resizeMode='cover'
-        loop={authState == null}
-        onAnimationFinish={() => { validadeInternetAccess() }}
+        loop={true}
       />
     </View>
   )

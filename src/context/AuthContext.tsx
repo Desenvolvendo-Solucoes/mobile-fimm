@@ -44,12 +44,10 @@ export const AuthProvider = ({ children }: any) => {
 
   const loadToken = async () => {
     const token = await SecureStore.getItemAsync(TOKEN_KEY)
-    console.log(token);
 
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       validaToken().then((res: any) => {
-        console.log(`validaToken: ${res.statusCode}`);
 
         if (res.statusCode === 401) {
           setAuthState({ token: null, authenticated: false })
@@ -65,9 +63,7 @@ export const AuthProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
-    console.log('carregando o token ');
 
-    loadToken()
 
   }, [])
 

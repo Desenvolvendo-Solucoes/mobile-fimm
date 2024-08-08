@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, Text, View, TouchableOpacity } from "react-native";
+import { Image, Text, View, TouchableOpacity, Alert } from "react-native";
 import Input from "../../components/Input";
 import { CheckBox } from 'react-native-elements'
 import Loading from "../../components/Loading";
@@ -18,35 +18,33 @@ const Login: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false)
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
 
-
-  const loading = () => {
-    <Loading />
-    navigation.navigate('HoleriteTabs');
-  };
-
-  const resetPassword = () => {
-    navigation.navigate('EsqueceuSenha');
-  };
-
-  const primeiroAcesso = () => {
-    navigation.navigate('PrimeiroAcesso');
+  const getCoords = (): Promise<Location.LocationObjectCoords> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { coords } = await Location.getCurrentPositionAsync()
+        resolve(coords)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   const login = async () => {
-    const { coords } = await Location.getCurrentPositionAsync()
+    getCoords().then(async (coords) => {
 
-    const result = await onLogin!(email, senha, coords)
-    if (result && result.error) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Email ou senha incorrecto',
-        visibilityTime: 3000,
-        autoHide: true,
-        topOffset: 60,
-        bottomOffset: 30,
-      })
-    }
+      const result = await onLogin!(email, senha, coords)
+      if (result && result.error) {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Email ou senha incorreto',
+          visibilityTime: 3000,
+          autoHide: true,
+          topOffset: 60,
+          bottomOffset: 30,
+        })
+      }
+    })
   }
 
   useEffect(() => {
@@ -60,13 +58,13 @@ const Login: React.FC = () => {
       <Input value={senha} setValue={setSenha} placeholder="Senha" password />
       <TouchableOpacity
         className="relative self-end  mr-10 mb-4"
-        onPress={resetPassword}
+        onPress={() => navigation.navigate('EsqueceuSenha')}
       >
         <Text>Esqueceu sua senha?</Text>
       </TouchableOpacity>
       <TouchableOpacity
         className={`w-80 h-14 ${isChecked === true ? 'bg-primary' : 'bg-slate-700'} rounded-full flex justify-center items-center mb-5`}
-        onPress={login}
+        onPress={() => { login() }}
         disabled={isChecked === true ? false : true}
       >
         <Text className='text-white text-[15px]'>Entrar</Text>
@@ -74,7 +72,7 @@ const Login: React.FC = () => {
 
       <TouchableOpacity
         className='w-80 h-14 bg-white rounded-full flex justify-center items-center border border-primary mb-2'
-        onPress={primeiroAcesso}
+        onPress={() => navigation.navigate('PrimeiroAcesso')}
       >
         <Text className='text-primary text-[15px]'>Meu Primeiro Acesso</Text>
       </TouchableOpacity>

@@ -20,7 +20,7 @@ const AppStack = createNativeStackNavigator<PropsStack>();
 const AuthRoutes: React.FC = () => {
     return (
         <AppStack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Splash"
             screenOptions={{
                 headerShown: false,
             }}
