@@ -18,12 +18,6 @@ const Login: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false)
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
 
-
-  const loading = () => {
-    <Loading />
-    navigation.navigate('HoleriteTabs');
-  };
-
   const resetPassword = () => {
     navigation.navigate('EsqueceuSenha');
   };
@@ -32,16 +26,11 @@ const Login: React.FC = () => {
     navigation.navigate('PrimeiroAcesso');
   };
 
-  const teste = async () => {
+  const login = async () => {
     const { coords } = await Location.getCurrentPositionAsync()
     console.log(coords);
 
-  };
-
-
-  const login = async () => {
-
-    const result = await onLogin!(email, senha)
+    const result = await onLogin!(email, senha, coords)
     if (result && result.error) {
       Toast.show({
         type: 'error',
@@ -68,7 +57,7 @@ const Login: React.FC = () => {
       </TouchableOpacity>
       <TouchableOpacity
         className={`w-80 h-14 ${isChecked === true ? 'bg-primary' : 'bg-slate-700'} rounded-full flex justify-center items-center mb-5`}
-        onPress={teste}
+        onPress={login}
         disabled={isChecked === true ? false : true}
       >
         <Text className='text-white text-[15px]'>Entrar</Text>
@@ -101,8 +90,6 @@ const Login: React.FC = () => {
         />
       </View>
       <Toast />
-
-
     </View>
   )
 }

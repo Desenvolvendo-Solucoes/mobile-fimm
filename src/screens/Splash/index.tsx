@@ -44,8 +44,6 @@ const Splash: React.FC = () => {
       return
     }
     setTimeout(validadeInternetAccess, 1000)
-
-    // validadeInternetAccess()
   }
 
   useEffect(() => {
@@ -65,8 +63,6 @@ const Splash: React.FC = () => {
         autoPlay
         resizeMode='cover'
         loop={true}
-      // onAnimationFinish={() => { validadeInternetAccess() }}
-      // progress={splashProgress}
       />
     </View>
   )
