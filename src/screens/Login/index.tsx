@@ -28,7 +28,6 @@ const Login: React.FC = () => {
 
   const login = async () => {
     const { coords } = await Location.getCurrentPositionAsync()
-    console.log(coords);
 
     const result = await onLogin!(email, senha, coords)
     if (result && result.error) {
