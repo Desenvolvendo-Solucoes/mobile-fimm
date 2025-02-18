@@ -4,7 +4,7 @@ import Input from "../../components/Input";
 import { CheckBox } from 'react-native-elements'
 import Loading from "../../components/Loading";
 import Toast from 'react-native-toast-message';
-
+import * as Location from 'expo-location'
 import { useNavigation } from '@react-navigation/native';
 import { PropsStack } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -18,12 +18,6 @@ const Login: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false)
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
 
-
-  const loading = () => {
-    <Loading />
-    navigation.navigate('HoleriteTabs');
-  };
-
   const resetPassword = () => {
     navigation.navigate('EsqueceuSenha');
   };
@@ -33,13 +27,15 @@ const Login: React.FC = () => {
   };
 
   const login = async () => {
+    const { coords } = await Location.getCurrentPositionAsync()
+    console.log(coords);
 
-    const result = await onLogin!(email, senha)
+    const result = await onLogin!(email, senha, coords)
     if (result && result.error) {
       Toast.show({
         type: 'error',
         position: 'top',
-        text1: 'Email ou senha incorrecto',
+        text1: 'Email ou senha incorreto',
         visibilityTime: 3000,
         autoHide: true,
         topOffset: 60,
@@ -94,8 +90,6 @@ const Login: React.FC = () => {
         />
       </View>
       <Toast />
-
-
     </View>
   )
 }
