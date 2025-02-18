@@ -292,6 +292,30 @@ export const AuthProvider = ({ children }: any) => {
     })
   }
 
+  const getEpiSolicitacoes = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await SecureStore.getItemAsync(TOKEN_KEY)
+        instance.get('/epi/solicitacoes', {
+          validateStatus: (status) => {
+            return status < 500
+          },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then((result) => {
+          console.log(result.data);
+
+          resolve(result.data)
+        }).catch(e => {
+          reject({ error: true, msg: (e as any).message })
+        })
+      } catch (e) {
+        reject({ error: true, msg: (e as any).response.data })
+      }
+    })
+  }
+
   const value = {
     onRegister: register,
     onLogin: login,
@@ -311,7 +335,8 @@ export const AuthProvider = ({ children }: any) => {
     onValidaResetCode: validaResetCode,
     onResetSenha: resetSenha,
     authState: authState,
-    validatToken: validaToken
+    onGetEpiSolicitacoes: getEpiSolicitacoes,
+    validatToken: validaToken,
   }
 
   return <AuthContext.Provider value={value} >{children}</AuthContext.Provider>

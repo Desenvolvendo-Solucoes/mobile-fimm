@@ -32,6 +32,7 @@ const EPI = [
     },
   },
 ];
+
 const Equipamentos = [
   {
     value: 'SmartPhone',
@@ -49,7 +50,7 @@ const Equipamentos = [
   },
 ];
 
-const DropDawnImages = ({screen,onSelect}) => {
+const DropDawnImages = ({ screen, onSelect }) => {
   const [country, setCountry] = useState(null);
   const handleCountryChange = (selectedCountry) => {
     setCountry(selectedCountry.value);
@@ -78,16 +79,17 @@ const DropDawnImages = ({screen,onSelect}) => {
 
 export default DropDawnImages;
 
+
 const styles = StyleSheet.create({
   dropdown: {
-    marginTop:16,
+    marginTop: 16,
     height: 50,
     width: '91.666667%',
     backgroundColor: '#fff',
     paddingHorizontal: 8,
     borderRadius: 4,
-    borderWidth:1,
-    borderColor:'#bbb'
+    borderWidth: 1,
+    borderColor: '#bbb'
   },
   imageStyle: {
     width: 24,
