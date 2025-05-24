@@ -2,17 +2,20 @@ import React, { useEffect, useRef, useState, } from "react";
 import { Text, TouchableOpacity, View, Modal, Image } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 
+
 import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
 import { PropsStack } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Icon from "react-native-vector-icons/Feather";
 import BtnVoltar from "../BtnVoltar";
 
 type Props = {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onFotoCapturada: (base64: string) => void
 }
 
-const Foto: React.FC<Props> = ({ setOpen }) => {
+const Foto: React.FC<Props> = ({ setOpen, onFotoCapturada }) => {
   const camRef = useRef(null)
   const [type, setType] = useState<CameraType>('back');
   const [permission, setRequestPermission] = useState(false);
@@ -28,9 +31,14 @@ const Foto: React.FC<Props> = ({ setOpen }) => {
     setOpen(false)
   };
 
-  const salvarFoto = () => {
-    setOpen(false)
-    // navigation.navigate('SolicitarEpi');
+  const salvarFoto = async () => {
+    if (fotoCapturada) {
+      const base64 = await FileSystem.readAsStringAsync(fotoCapturada, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      onFotoCapturada(base64);
+    }
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -47,12 +55,13 @@ const Foto: React.FC<Props> = ({ setOpen }) => {
 
   async function tirarFoto() {
     setFotoCapturada(null);
-    if (camRef) {
-      const data = await camRef?.current!.takePictureAsync({ quality: 0.5 });
+    if (camRef.current) {
+      const data = await camRef.current.takePictureAsync({ quality: 0.5, base64: true });
       setFotoCapturada(data.uri);
       setOpenFoto(true);
     }
   }
+  
 
   return (
     <View className="flex-1 justify-center">

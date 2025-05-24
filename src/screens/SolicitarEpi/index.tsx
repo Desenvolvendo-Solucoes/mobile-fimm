@@ -13,6 +13,9 @@ import Foto from "src/components/Foto";
 const SolicitarEpi: React.FC = () => {
   const [epiSelecionado, setEpiSelecionado] = useState(null);
   const [openCamera, setOpenCamera] = useState(false)
+  const [fotoBase64, setFotoBase64] = useState<string | null>(null);
+  const [descricao, setDescricao] = useState('');
+  const [tamanhoSelecionado, setTamanhoSelecionado] = useState('');
   const navigation = useNavigation<NativeStackNavigationProp<PropsStack>>();
 
   const handleCountrySelect = (country: any) => {
@@ -25,6 +28,39 @@ const SolicitarEpi: React.FC = () => {
   const foto = () => {
     setOpenCamera(true)
   };
+  const enviarSolicitacao = async () => {
+    if (!fotoBase64 || !epiSelecionado || !tamanhoSelecionado || !descricao) {
+      alert("Preencha todos os campos antes de enviar.");
+      return;
+    }
+  
+    try {
+      const payload = {
+        foto: fotoBase64,
+        epi: epiSelecionado,
+        tamanho: tamanhoSelecionado,
+        descricao: descricao
+      };
+  
+      const response = await fetch("https://sua-api.com/solicitacoes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+  
+      if (response.ok) {
+        alert("Solicitação enviada com sucesso!");
+        navigation.navigate("EPI");
+      } else {
+        alert("Erro ao enviar a solicitação.");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro de conexão com o servidor.");
+    }
+  };
 
   return (
     <View className='flex-1 mt-4 items-center'>
@@ -32,17 +68,22 @@ const SolicitarEpi: React.FC = () => {
         <Text >Informe os detalhes do EPI</Text>
       </View>
       <DropDawnImages screen="SolicitaEpi" onSelect={handleCountrySelect} />
-      <DropDownTamanhos epi={epiSelecionado} />
-      <View className="m-3 w-11/12 p-3 border border-primary rounded-md bg-white ">
-        <TextInput
-          style={{ textAlignVertical: 'top' }}
-          className="h-24"
-          multiline
-          numberOfLines={4}
-          placeholder='Relate seu problema'
-          placeholderTextColor="#00266F"
-        />
-      </View>
+      <DropDownTamanhos
+  epi={epiSelecionado}
+  onChange={(valor) => setTamanhoSelecionado(valor)}
+/>
+      <View className="m-3 w-11/12 p-3 border border-primary rounded-md bg-white">
+  <TextInput
+    style={{ textAlignVertical: 'top' }}
+    className="h-24 text-primary"
+    multiline
+    numberOfLines={4}
+    placeholder='Relate seu problema'
+    placeholderTextColor="#00266F"
+    value={descricao}
+    onChangeText={setDescricao}
+  />
+</View>
       <View className="mb-3 bg-white p-4 w-11/12 border border-primary rounded-lg ">
         <TouchableOpacity className="flex-row items-center justify-center"
           onPress={foto}
@@ -54,11 +95,11 @@ const SolicitarEpi: React.FC = () => {
         </TouchableOpacity>
       </View>
       <View className="mb-3 bg-primary p-4 w-11/12 rounded-lg">
-        <TouchableOpacity onPress={cancelar}>
+      <TouchableOpacity onPress={enviarSolicitacao}>
           <Text className="text-center text-white font-bold">
             Enviar
           </Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
       </View>
       <View className="mb-13 bg-error p-4 w-11/12 rounded-lg ">
         <TouchableOpacity onPress={cancelar}>
@@ -69,7 +110,7 @@ const SolicitarEpi: React.FC = () => {
       </View>
 
       <Modal visible={openCamera} >
-        <Foto setOpen={setOpenCamera} />
+      <Foto setOpen={setOpenCamera} onFotoCapturada={(base64) => setFotoBase64(base64)} />
       </Modal>
     </View>
   )

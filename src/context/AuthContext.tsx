@@ -22,7 +22,7 @@ interface AuthProp {
 
 const TOKEN_KEY = 'my-jwt'
 const instance = axios.create({
-  baseURL: "https://fimm-api.8corp.com.br"
+  baseURL: "http://appfimm.ddns.net:33001"
 });
 
 const AuthContext = createContext<AuthProp>({})

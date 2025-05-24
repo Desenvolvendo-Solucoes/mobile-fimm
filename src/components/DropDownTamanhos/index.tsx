@@ -75,8 +75,20 @@ const alicate = [
   { label: '-', value: '-' },
 ]
 
-const DropDownTamanhos = ({epi}) => {
+const DropDownTamanhos = ({ epi, onChange }) => {
   const [value, setValue] = useState(null);
+
+  const handleSelect = (item) => {
+    setValue(item.value);
+    onChange(item.value); // <-- Envia para o componente pai
+  };
+
+  const getOptions = () => {
+    if (epi === "Botina") return botina;
+    if (epi === "Capa de Chuva") return capa;
+    if (epi === "Protetor Solar") return protetor;
+    return alicate;
+  };
 
   return (
     <Dropdown
@@ -85,7 +97,7 @@ const DropDownTamanhos = ({epi}) => {
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
-      data={epi === "Botina" ? botina : epi === "Capa de Chuva" ? capa : epi === "Protetor Solar" ? protetor : alicate  }
+      data={getOptions()}
       search
       maxHeight={300}
       labelField="label"
@@ -93,9 +105,7 @@ const DropDownTamanhos = ({epi}) => {
       placeholder="Tamanho"
       searchPlaceholder="Search..."
       value={value}
-      onChange={item => {
-        setValue(item.value);
-      }}
+      onChange={handleSelect}
       renderLeftIcon={() => (
         <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
       )}
