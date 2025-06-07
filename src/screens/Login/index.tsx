@@ -13,6 +13,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const Login: React.FC = () => {
   const { onLogin } = useAuth()
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>()
   const [senha, setSenha] = useState<string>()
   const [isChecked, setIsChecked] = useState(false)
@@ -27,14 +28,17 @@ const Login: React.FC = () => {
   };
 
   const login = async () => {
+    setLoading(true)
     const { coords } = await Location.getCurrentPositionAsync()
 
     const result = await onLogin!(email, senha, coords)
     if (result && result.error) {
+      setLoading(false)
       Toast.show({
         type: 'error',
         position: 'top',
-        text1: 'Email ou senha incorreto',
+        text1: result.msg,
+        text2: 'Tente novamente ou entre em contato com o suporte.',
         visibilityTime: 3000,
         autoHide: true,
         topOffset: 60,
@@ -42,6 +46,7 @@ const Login: React.FC = () => {
       })
     }
   }
+
 
   return (
     <View className="flex flex-1 justify-center items-center p-6" >
@@ -56,10 +61,11 @@ const Login: React.FC = () => {
       </TouchableOpacity>
       <TouchableOpacity
         className={`w-80 h-14 ${isChecked === true ? 'bg-primary' : 'bg-slate-700'} rounded-full flex justify-center items-center mb-5`}
-        onPress={login}
+        onPress={!loading ? login : () => { }}
         disabled={isChecked === true ? false : true}
       >
-        <Text className='text-white text-[15px]'>Entrar</Text>
+        {loading ? <Loading /> : (<Text className='text-white text-[15px]'>Entrar</Text>)}
+
       </TouchableOpacity>
 
       <TouchableOpacity

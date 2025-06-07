@@ -22,7 +22,7 @@ interface AuthProp {
 
 const TOKEN_KEY = 'my-jwt'
 const instance = axios.create({
-  baseURL: "https://fimm-api.8corp.com.br"
+  baseURL: "http://appfimm.ddns.net:33001"
 });
 
 const AuthContext = createContext<AuthProp>({})
@@ -90,7 +90,16 @@ export const AuthProvider = ({ children }: any) => {
       return result
 
     } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg }
+      console.log('Error: ', e.toString().trim());
+
+      switch (e.toString().trim()) {
+        case 'AxiosError: Request failed with status code 401':
+          return { error: true, msg: 'Email ou senha incorreto' }
+        case 'AxiosError: Request failed with status code 500':
+          return { error: true, msg: 'Erro interno do servidor' }
+        default:
+          return { error: true, msg: 'Erro desconhecido' }
+      }
     }
 
   }
